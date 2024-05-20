@@ -1,38 +1,38 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-const forma = document.querySelector('.form');
+const form = document.querySelector('.form');
 
-forma.addEventListener('submit', createForma);
+form.addEventListener('submit', createNotification);
 
-function createForma(event) {
+function createNotification(event) {
   event.preventDefault();
 
   const delay = event.target.elements.delay.value;
   const state = event.target.elements.state.value;
 
-  formaPromis(delay, state)
-    .then(message => console.log(`✅ Fulfilled promise in ${delay}ms`))
-    .catch(message => console.error(`❌ Rejected promise in ${delay}ms`));
+  runTimerPromis(delay, state)
+    .then(delay => {
+      iziToast.success({
+        title: `✅ Fulfilled promise in ${delay}ms`,
+        position: 'topRight',
+      });
+    })
+    .catch(delay => {
+      iziToast.error({
+        title: `❌ Rejected promise in ${delay}ms`,
+        position: 'topRight',
+      });
+    });
 }
 
-const formaPromis = (delay, state) => {
+const runTimerPromis = (delay, state) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (state === 'fulfilled') {
-        resolve(
-          iziToast.success({
-            title: `✅ Fulfilled promise in ${delay}ms`,
-            position: 'topRight',
-          })
-        );
+        resolve(delay);
       } else {
-        reject(
-          iziToast.error({
-            title: `❌ Rejected promise in ${delay}ms`,
-            position: 'topRight',
-          })
-        );
+        reject(delay);
       }
     }, delay);
   });
